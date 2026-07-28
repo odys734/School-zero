@@ -1,0 +1,6 @@
+{
+  "name": "SchoolZero",
+  "description": "School days countdown calculator excluding weekly offs, holidays, vacations, and personal leaves.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
