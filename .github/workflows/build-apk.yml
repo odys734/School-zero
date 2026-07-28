@@ -25,16 +25,38 @@ jobs:
           distribution: temurin
           java-version: "21"
 
-      - name: Install dependencies
+      - name: Install app dependencies
         run: npm install
 
-      - name: Build web app
+      - name: Install Capacitor build dependencies
+        run: |
+          npm install --no-save \
+            @capacitor/core@7 \
+            @capacitor/android@7 \
+            @capacitor/cli@7 \
+            @capacitor/local-notifications@7
+
+      - name: Build SchoolZero web app
         run: npm run build
+
+      - name: Generate Capacitor config
+        run: |
+          cat > capacitor.config.ts <<'EOF'
+          import type { CapacitorConfig } from '@capacitor/cli';
+
+          const config: CapacitorConfig = {
+            appId: 'com.schoolzero.app',
+            appName: 'SchoolZero',
+            webDir: 'dist'
+          };
+
+          export default config;
+          EOF
 
       - name: Create Android project
         run: npx cap add android
 
-      - name: Sync Capacitor
+      - name: Sync Android project
         run: npx cap sync android
 
       - name: Make Gradle executable
@@ -44,7 +66,7 @@ jobs:
         working-directory: android
         run: ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Upload SchoolZero APK
         uses: actions/upload-artifact@v4
         with:
           name: SchoolZero-APK
